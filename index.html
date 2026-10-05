@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ถามอะไรหน่อยสิ...</title>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Mitr','Noto Sans Thai',sans-serif;-webkit-tap-highlight-color:transparent}
+
+html,body{height:100%}
+body{
+  display:flex;justify-content:center;align-items:center;
+  min-height:100vh;min-height:100dvh;
+  background:linear-gradient(135deg,#ffe3ec,#fdf0f4,#ffd9e8,#f3e1ff);
+  background-size:300% 300%;
+  animation:bgShift 12s ease-in-out infinite;
+  overflow:hidden;position:relative;
+}
+@keyframes bgShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* ลูกแสงฟุ้งๆ ด้านหลัง */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.55;z-index:0;pointer-events:none;animation:blobMove 9s ease-in-out infinite}
+.blob.b1{width:260px;height:260px;background:#ff9ab8;top:-60px;left:-60px}
+.blob.b2{width:300px;height:300px;background:#d9b3ff;bottom:-80px;right:-80px;animation-delay:-4s}
+@keyframes blobMove{0%,100%{translate:0 0}50%{translate:40px 30px}}
+
+/* ฝนหัวใจ */
+#rain{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+.heart{
+  position:absolute;top:-50px;line-height:1;user-select:none;
+  animation:fall linear forwards;
+  filter:drop-shadow(0 2px 4px rgba(230,57,86,.25));
+}
+@keyframes fall{
+  0%{transform:translate3d(0,0,0) rotate(0deg);opacity:0}
+  8%{opacity:var(--o,.9)}
+  50%{transform:translate3d(var(--sway),55vh,0) rotate(calc(var(--spin)/2))}
+  100%{transform:translate3d(calc(var(--sway)*-1),112vh,0) rotate(var(--spin));opacity:var(--o,.9)}
+}
+
+/* การ์ด */
+.card{
+  position:relative;z-index:10;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:35px 25px;border-radius:32px;
+  box-shadow:10px 10px 30px rgba(220,170,180,.35),-10px -10px 30px rgba(255,255,255,.9);
+  text-align:center;width:88%;max-width:360px;
+  border:1px solid rgba(255,255,255,.9);
+}
+.card.shake{animation:cardShake .4s}
+@keyframes cardShake{0%,100%{rotate:0deg}20%{rotate:-2.5deg}40%{rotate:2.5deg}60%{rotate:-1.5deg}80%{rotate:1.5deg}}
+
+.gif-container img{
+  width:140px;height:140px;object-fit:contain;border-radius:20px;margin-bottom:20px;
+  filter:drop-shadow(0 8px 15px rgba(0,0,0,.08));
+  animation:float 3s ease-in-out infinite;
+}
+.gif-container .emoji{font-size:84px;line-height:1.1;margin-bottom:20px;user-select:none;filter:drop-shadow(0 8px 12px rgba(230,57,86,.25));animation:float 3s ease-in-out infinite,oink 4s ease-in-out infinite}
+@keyframes oink{0%,70%,100%{rotate:0deg;scale:1}78%{rotate:-10deg;scale:1.12}86%{rotate:10deg;scale:1.12}94%{rotate:-4deg}}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -8px}}
+
+h1{
+  font-size:1.35rem;font-weight:500;margin-bottom:25px;min-height:60px;
+  display:flex;align-items:center;justify-content:center;line-height:1.4;
+  background:linear-gradient(90deg,#e63956,#ff7aa8,#a855f7,#e63956);
+  background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:textFlow 4s linear infinite;
+}
+h1.pop{animation:textFlow 4s linear infinite,pop .35s ease}
+@keyframes textFlow{to{background-position:250% 0}}
+@keyframes pop{0%{scale:.7}60%{scale:1.12}100%{scale:1}}
+
+.btn-group{display:flex;justify-content:center;align-items:center;gap:18px;min-height:64px}
+
+button{
+  padding:12px 26px;font-size:1rem;font-weight:500;border:none;border-radius:50px;
+  cursor:pointer;touch-action:manipulation;
+}
+
+/* ปุ่มคิดถึง: สีไล่เฉด + เรืองแสง + สั่นเป็นจังหวะ */
+.btn-yes{
+  --s:1;
+  transform:scale(var(--s));
+  transition:transform .25s cubic-bezier(.3,1.6,.5,1);
+  color:#fff;position:relative;z-index:100;
+  background:linear-gradient(120deg,#ff5c7c,#ff8fb1,#c26bff,#ff5c7c);
+  background-size:300% 100%;
+  box-shadow:0 8px 20px rgba(230,57,86,.4),inset 0 2px 3px rgba(255,255,255,.45),inset 0 -2px 3px rgba(0,0,0,.15);
+  animation:shimmer 3s linear infinite,glow 1.6s ease-in-out infinite,wiggle 2.8s ease-in-out infinite;
+}
+.btn-yes:hover{animation:shimmer 1.2s linear infinite,glow 1s ease-in-out infinite,jelly .5s ease infinite}
+.btn-yes:active{transform:scale(calc(var(--s)*.94))}
+@keyframes shimmer{to{background-position:300% 0}}
+@keyframes glow{0%,100%{box-shadow:0 8px 20px rgba(230,57,86,.4),inset 0 2px 3px rgba(255,255,255,.45)}50%{box-shadow:0 8px 34px rgba(255,92,124,.85),inset 0 2px 3px rgba(255,255,255,.45)}}
+@keyframes wiggle{
+  0%,60%,100%{rotate:0deg;translate:0 0}
+  66%{rotate:-8deg}72%{rotate:8deg;translate:0 -3px}
+  78%{rotate:-6deg}84%{rotate:6deg}90%{rotate:-3deg}
+}
+@keyframes jelly{0%,100%{rotate:0deg}25%{rotate:-6deg}50%{rotate:6deg}75%{rotate:-3deg}}
+
+/* ปุ่มไม่ได้คิดถึง: สั่นหลอกๆ ให้ดูกลัว */
+.btn-no{
+  background:linear-gradient(145deg,#f4f4f7,#e4e4ea);color:#6c757d;
+  box-shadow:5px 5px 12px #d1d1d4,-5px -5px 12px #fff,inset 0 1px 2px rgba(255,255,255,.8);
+  z-index:999;
+  animation:nervous 1.8s ease-in-out infinite;
+  transition:left .35s cubic-bezier(.3,1.5,.5,1),top .35s cubic-bezier(.3,1.5,.5,1);
+}
+@keyframes nervous{0%,100%{translate:0 0}10%{translate:-2px 0}20%{translate:2px 0}30%{translate:-2px 1px}40%{translate:2px -1px}50%{translate:0 0}}
+
+/* หน้าตอบรับ */
+.success-content{display:none}
+.success-content.show{display:block;animation:pop .5s ease}
+.success-content h2{
+  font-size:1.5rem;font-weight:600;margin-top:10px;
+  background:linear-gradient(90deg,#e63956,#ff7aa8,#a855f7,#e63956);background-size:250% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:textFlow 3s linear infinite;
+}
+.success-content p{color:#4a4a4a;font-size:1.05rem;margin-top:8px;line-height:1.5}
+.again{margin-top:18px;padding:8px 20px;font-size:.9rem;color:#e63956;background:#fff;box-shadow:0 4px 12px rgba(230,57,86,.2)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important}
+  #rain{display:none}
+}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div>
+<div id="rain" aria-hidden="true"></div>
+
+<div class="card" id="card">
+  <div id="questionContent">
+    <div class="gif-container">
+      <div class="emoji" id="displayImg" role="img" aria-label="หมู">🐷</div>
+    </div>
+    <h1 id="questionText">คิดถึงกันมั้ยยย</h1>
+    <div class="btn-group">
+      <button class="btn-yes" id="yesBtn" type="button">คิดถึง 💗</button>
+      <button class="btn-no" id="noBtn" type="button">ไม่ได้คิดถึง</button>
+    </div>
+  </div>
+
+  <div class="success-content" id="successContent">
+    <div class="gif-container">
+      <div class="emoji" id="successImg" role="img" aria-label="หมูดีใจ">🐷💖</div>
+    </div>
+    <h2>ว่าแล้วต้องคิดถึงเหมือนกัน</h2>
+    <p>รักหมูตุ้ยย 💖</p>
+    <button class="again" id="againBtn" type="button">เล่นอีกรอบ</button>
+  </div>
+</div>
+
+<script>
+const card = document.getElementById('card');
+const noBtn = document.getElementById('noBtn');
+const yesBtn = document.getElementById('yesBtn');
+const questionText = document.getElementById('questionText');
+const rain = document.getElementById('rain');
+
+let clickCount = 0, yesSize = 1, lastMove = 0, lastX = null, lastY = null;
+let rainTimer = null, rainRate = 380;
+
+const teaserTexts = [
+  "ตอบดีๆ ไอตุ้ย","ตุ้ยกดดีๆ","กดให้โดนสักทีไอหมู",
+  "แหน่ะ ยังจะพยายามไล่กดอีก","กดได้แล้วมั้ง กดให้โดน","ปุ่มจะใหญ่เท่าตัวแล้ว กดได้แล้ว"
+];
+
+/* ---------- ฝนหัวใจ ---------- */
+const HEARTS = ['💖','💗','💕','💘','❤️','🩷','💝','💓'];
+function spawnHeart(){
+  if (rain.childElementCount > 45) return;
+  const h = document.createElement('span');
+  h.className = 'heart';
+  h.textContent = HEARTS[Math.floor(Math.random()*HEARTS.length)];
+  const size = 12 + Math.random()*24;
+  h.style.left = Math.random()*100 + 'vw';
+  h.style.fontSize = size + 'px';
+  h.style.setProperty('--sway', (Math.random()*60-30) + 'px');
+  h.style.setProperty('--spin', (Math.random()*80-40) + 'deg');
+  h.style.setProperty('--o', (0.5 + Math.random()*0.5).toFixed(2));
+  h.style.animationDuration = (5 + Math.random()*6) + 's';
+  h.addEventListener('animationend', () => h.remove());
+  rain.appendChild(h);
+}
+function startRain(rate){
+  clearInterval(rainTimer);
+  rainRate = rate;
+  rainTimer = setInterval(spawnHeart, rate);
+}
+for (let i = 0; i < 14; i++) setTimeout(spawnHeart, i*120); // เริ่มมาแล้วมีหัวใจเลย
+startRain(380);
+document.addEventListener('visibilitychange', () => {
+  document.hidden ? clearInterval(rainTimer) : startRain(rainRate);
+});
+
+/* ---------- ปุ่มวิ่งหนี ---------- */
+function moveNoButton(e){
+  if (e && e.cancelable) e.preventDefault();
+
+  // กันเด้งซ้ำ (mouse/touch/click ยิงมาพร้อมกัน)
+  const now = Date.now();
+  if (now - lastMove < 250) return;
+  lastMove = now;
+
+  // สาเหตุที่ปุ่มหลุดจอ: backdrop-filter ของการ์ดทำให้ position:fixed อิงการ์ด ไม่ใช่หน้าจอ
+  // จึงย้ายปุ่มออกมาไว้ที่ body ก่อนวิ่งหนี
+  if (noBtn.parentElement !== document.body) document.body.appendChild(noBtn);
+
+  const w = noBtn.offsetWidth, h = noBtn.offsetHeight;
+  const vw = document.documentElement.clientWidth, vh = window.innerHeight;
+  const maxX = Math.max(10, vw - w - 10);
+  const maxY = Math.max(10, vh - h - 10);
+
+  // สุ่มตำแหน่งใหม่ที่ไกลจากตำแหน่งเดิมพอสมควร
+  let x, y, tries = 0;
+  do {
+    x = 10 + Math.floor(Math.random()*(maxX-10+1));
+    y = 10 + Math.floor(Math.random()*(maxY-10+1));
+    tries++;
+  } while (lastX !== null && Math.hypot(x-lastX, y-lastY) < 140 && tries < 12);
+  lastX = x; lastY = y;
+
+  noBtn.style.position = 'fixed';
+  noBtn.style.left = x + 'px';
+  noBtn.style.top = y + 'px';
+
+  questionText.textContent = clickCount < teaserTexts.length ? teaserTexts[clickCount] : "ปุ่มตัวเท่าหมูแล้วกดให้โดนน";
+  questionText.classList.remove('pop'); void questionText.offsetWidth; questionText.classList.add('pop');
+
+  // การ์ดสั่น + ปุ่มคิดถึงโตขึ้น (จำกัดไม่ให้ล้นจอ)
+  card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+  yesSize = Math.min(yesSize + 0.2, 2.2);
+  yesBtn.style.setProperty('--s', yesSize);
+
+  // ยิ่งแกล้งเยอะ ฝนหัวใจยิ่งตกหนัก
+  if (clickCount % 2 === 1 && rainRate > 140) startRain(Math.max(140, rainRate - 60));
+
+  clickCount++;
+}
+noBtn.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') moveNoButton(e); });
+noBtn.addEventListener('pointerdown', moveNoButton);
+noBtn.addEventListener('click', moveNoButton);
+window.addEventListener('resize', () => {
+  if (noBtn.parentElement !== document.body) return;
+  const x = Math.min(parseFloat(noBtn.style.left) || 10, Math.max(10, document.documentElement.clientWidth - noBtn.offsetWidth - 10));
+  const y = Math.min(parseFloat(noBtn.style.top) || 10, Math.max(10, window.innerHeight - noBtn.offsetHeight - 10));
+  noBtn.style.left = x + 'px';
+  noBtn.style.top = y + 'px';
+});
+
+/* ---------- ตอบรับ ---------- */
+function heartConfetti(){
+  const opts = { particleCount: 70, spread: 80, origin: { y: .6 } };
+  try {
+    const heart = confetti.shapeFromPath({ path: 'M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z' });
+    confetti({ ...opts, shapes: [heart], colors: ['#ff5c7c','#ff8fb1','#c26bff','#ffb3c8'], scalar: 1.6 });
+  } catch (_) {}
+  confetti({ ...opts, particleCount: 40 });
+}
+function acceptLove(){
+  document.getElementById('questionContent').style.display = 'none';
+  const s = document.getElementById('successContent');
+  s.classList.add('show');
+  noBtn.style.display = 'none';
+  startRain(110);
+  heartConfetti();
+  setTimeout(heartConfetti, 450);
+}
+yesBtn.addEventListener('click', acceptLove);
+
+document.getElementById('againBtn').addEventListener('click', () => {
+  document.getElementById('successContent').classList.remove('show');
+  document.getElementById('questionContent').style.display = 'block';
+  noBtn.removeAttribute('style');
+  document.querySelector('.btn-group').appendChild(noBtn);
+  clickCount = 0; yesSize = 1; lastX = lastY = null;
+  yesBtn.style.setProperty('--s', 1);
+  questionText.textContent = 'คิดถึงกันมั้ยยย';
+  startRain(380);
+});
+
+</script>
+</body>
+</html>
